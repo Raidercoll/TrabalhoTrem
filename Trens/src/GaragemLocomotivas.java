@@ -29,13 +29,22 @@ public class GaragemLocomotivas {
         }
         return null;
     }
-    
-    @Override
-    public String toString() {
-        String aux = "Garagem de Locomotivas\nEstacionadas: "+locomotivas.size()+"\n";
-        for(Locomotiva l : locomotivas){
-            aux += l.toString()+"\n";
+
+    public boolean verificaLocomotiva(int id){
+        for(Locomotiva l: locomotivas){
+            if(l.getId() == id){
+                return true;
+            }
         }
-        return aux;
+        return false;
+    }
+    
+   @Override
+    public String toString() {
+       String aux = "Garagem de Locomotivas\nEstacionadas: "+locomotivas.size()+"\n";
+       for(Locomotiva l : locomotivas){
+           aux += l.toString()+"\n";
+       }
+       return aux;
     }
 }

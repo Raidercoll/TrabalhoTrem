@@ -50,18 +50,21 @@ public class App {
         case 1:
           System.out.println("Digite um identificador para o  trem:");
           int identificadorTrem = sc.nextInt();
-          System.out.println("\n");
 
           if (patio.verificaTrem(identificadorTrem) == true) {
             System.out.println("Já existe um trem com esse identificador!!");
             continue;
-
           }
           System.out.println("Escolha uma das locomotivas abaixo para engatar no Trem: \n");
           System.out.print(garagemLocomotiva.toString());
 
           System.out.println("Escolha uma Locomotiva: ");
           int identificadorLocomotiva = sc.nextInt();
+          
+          if(garagemLocomotiva.verificaLocomotiva(identificadorLocomotiva)==false){
+            System.out.println("Essa locomotiva, ou não existe ou ja esta em um Trem!");
+            continue;
+          }
 
           Locomotiva auxL1 = garagemLocomotiva.procurLocomotiva(identificadorLocomotiva);
           Trem auxT1 = criaTrem(identificadorTrem, auxL1);
@@ -73,12 +76,16 @@ public class App {
           System.out.println(patio.toString());
 
           continue;
+
         case 2:
-          // Inicialmente deve-se indicar o identificador do trem a ser editado. A partir
-          // de então ficam liberadas as seguintes operações:
           System.out.println("Patio:\n" + patio.toString());
           System.out.println("Escolha um dos Trens estacionados no patio: ");
           int idTrem = sc.nextInt();
+
+          if(patio.verificaTrem(idTrem) == false){
+            System.out.println("Esse Trem ainda não foi criado!!");
+            continue;
+          }
 
           while (true) {
             System.out.println("Menu de edição de trem.");
@@ -101,6 +108,12 @@ public class App {
                   System.out.println("Não é possível inserir uma locomotiva após um vagão!!");
                   continue;
                 }
+
+                if(garagemLocomotiva.verificaLocomotiva(idLoc)==false){
+                  System.out.println("Essa locomotiva, ou não existe ou ja esta em um Trem!");
+                  continue;
+                }
+
                 Locomotiva auxL = garagemLocomotiva.procurLocomotiva(idLoc);
                 patio.procuraTrem(idTrem).engataLocomotiva(auxL);
 
@@ -113,6 +126,11 @@ public class App {
                 System.out.println("Garagem dos vagoes: \n" + garagemVagoes.toString());
                 System.out.println("Escolha um dos vagoes: ");
                 int idVag = sc.nextInt();
+
+                if(garagemVagoes.verificaVagao(idVag) == false){
+                  System.out.println("Esse vagao, ou não existe ou ja esta em um Trem!");
+                  continue;
+                }
 
                 Vagao auxV = garagemVagoes.procurVagao(idVag);
                 patio.procuraTrem(idTrem).engataVagao(auxV);
@@ -130,18 +148,18 @@ public class App {
                 Trem auxT3 = patio.procuraTrem(idTrem);
                 if(auxStr.equals("SIM")||auxStr.equals("S")){
                   if(auxT3.getQntVageoes() >= 1){
-                    patio.procuraTrem(idTrem).desengataVagao();
                     Vagao auxVag = patio.procuraTrem(idTrem).desengataVagao();
                     garagemVagoes.vagaoEntra(auxVag);
 
                   }else{
-                    patio.procuraTrem(idTrem).desengataLocomotiva();
+                    if(auxT3.getQntLocomotivas() == 1){
+                      System.out.println("Para remover a ultima locomotiva é necessário excluir o Trem!!");
+                      continue;
+                    }
                     Locomotiva auxLocomotiva = patio.procuraTrem(idTrem).desengataLocomotiva();
                     garagemLocomotiva.locomotivaEntra(auxLocomotiva);
                   }
                 }
-                
-                
                 continue;
 
               case 4:
@@ -171,31 +189,25 @@ public class App {
         String resp = sc.next();
         String auxStr = resp.toUpperCase();
         Trem auxTrem1 = patio.procuraTrem(idTrem1);
+
         if(auxStr.equals("SIM")||auxStr.equals("S")){
-          for(int i = auxTrem1.getTamanhoTrem(); i >= 1; i -- ){
-            if(auxTrem1.getQntVageoes() >= 1){
-              Vagao auxVag = patio.procuraTrem(idTrem1).desengataVagao();
-              patio.procuraTrem(idTrem1).desengataVagao();
-              garagemVagoes.vagaoEntra(auxVag);
-            }else{
-              Locomotiva auxLocomotiva = patio.procuraTrem(idTrem1).desengataLocomotiva();
-              patio.procuraTrem(idTrem1).excluirTrem();
+
+          for(int i = auxTrem1.getQntLocomotivas(); i > 0; i--){
+              Locomotiva auxLocomotiva = auxTrem1.desengataLocomotiva();
               garagemLocomotiva.locomotivaEntra(auxLocomotiva);
-            }
           }
-          // patio.tremSai(idTrem1);
+
+          for(int x = auxTrem1.getQntVageoes(); x> 0; x--){
+            Vagao auxVag = auxTrem1.desengataVagao();
+            garagemVagoes.vagaoEntra(auxVag);
+          }
+          patio.tremSai(idTrem1);
         }
           continue;
 
         case 5:
           // sair...
           System.out.println("Saindo...");
-
-        case 6:
-        System.out.println("garagem locomotiva: "+garagemLocomotiva.toString());
-
-        case 7:
-        System.out.println("garage, vagoes: "+garagemVagoes.toString());
 
       }
       break;
@@ -204,7 +216,6 @@ public class App {
   }
 
   public static Trem criaTrem(int id, Locomotiva locomotiva) {
-
     Trem trem = new Trem(id, locomotiva);
     return trem;
   }

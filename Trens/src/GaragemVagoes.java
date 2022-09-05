@@ -8,6 +8,7 @@ public class GaragemVagoes {
     }
 
     public void vagaoEntra(Vagao vagao){
+        // vagao.setTrem(null);
         vagoes.add(vagao);
     }
 
@@ -28,6 +29,15 @@ public class GaragemVagoes {
             }
         }
         return null;
+    }
+
+    public boolean verificaVagao(int id){
+        for(Vagao v: vagoes){
+            if(v.getId() == id){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

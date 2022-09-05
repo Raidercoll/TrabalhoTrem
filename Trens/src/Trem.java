@@ -11,7 +11,6 @@ public class Trem {
 
         locomotivas = new ArrayList<>();
         vagoes = new ArrayList<>();
-        // locomotiva.setTrem(this);
         locomotivas.add(locomotiva);
 
     }
@@ -81,7 +80,6 @@ public class Trem {
             return false;
         }
         locomotivas.add(locomotiva);
-        // locomotiva.setTrem(tre);
         return true;
     }
 
@@ -93,25 +91,17 @@ public class Trem {
         if(pesoVagoes() >= calculaPesoMax()){
             return false;
         }
+
         vagoes.add(vagao);
-        // vagao.setTrem(this);
         return true;
     }
 
 
     public Locomotiva desengataLocomotiva(){
-        if(locomotivas.size() <= 1){
-            return null;
-        }
-        Locomotiva aux = locomotivas.remove(locomotivas.size()-1);
-        aux.setTrem(null);
-        return aux;
-    }
-
-    public Locomotiva excluirTrem(){
         if(locomotivas.size() == 0){
             return null;
         }
+
         Locomotiva aux = locomotivas.remove(locomotivas.size()-1);
         aux.setTrem(null);
         return aux;
